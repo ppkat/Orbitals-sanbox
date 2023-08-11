@@ -116,18 +116,31 @@ function createGame() {
 
                     distancex = distance * cosFi
                     distancey = distance * sinFi
-                    console.log('overlaped')
 
                     function nuclearFusion() {
-                        if (overlappedDistance > radiusSum / 4) {
-                            body1.radius += body2.radius / 2
-                            body1.mass += body2.mass
-                            state.splice(j, 1)
+                        if (overlappedDistance > radiusSum / 2.3) {
+                            if (body1.mass > body2.mass) {
+                                body1.radius = body1.radius + body2.radius / (Math.sqrt(2) * 1.2)
+                                body1.mass += body2.mass
+                                state.splice(j, 1)
+                            }
+                            else {
+                                body2.radius = body2.radius + body1.radius / (Math.sqrt(2) * 1.2)
+                                body2.mass += body1.mass
+                                state.splice(i, 1)
+                            }
+
                             console.log('fusion')
                         }
+                        // else {
+                        //     body1.mass /= 2
+                        //     body1.radius /= Math.sqrt(2)
+                        //     createParticle({ color: body1.color, mass: body1.mass, x: body1.x - body1.radius, y: body1.y + body1.radius, radius: body1.radius })
+                        //     console.log('new particle')
+                        // }
                     }
 
-                    nuclearFusion()
+                    //nuclearFusion()
                 }
 
                 const isOverlap = distance < radiusSum
@@ -149,6 +162,9 @@ function createGame() {
         }
 
         function border() {
+            if (body1.color === 'blue') {
+                return setInterval(() => state.splice(i, 1), 2000)
+            }
             if (body1.x <= 0) {
                 body1.x = 0
                 body1.speedx = -body1.speedx
@@ -172,7 +188,10 @@ function createGame() {
 
     function draw() {
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        //black painting
+        ctx.fillStyle = 'black'
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
         for (let body of game.state) {
             ctx.fillStyle = body.color
             ctx.beginPath()
@@ -180,30 +199,116 @@ function createGame() {
             ctx.fill()
         }
     }
-    // createParticle({ color: 'aqua', mass: 5 * 10 ** 14, x: canvas.width / 2, y: canvas.height / 2, radius: 90, speedx: 0, speedy: 0 })
-    // createParticle({ color: 'blue', mass: 4 * 10 ** 13, x: 999, y: 200, radius: 20, speedx: 8 })
-    // createParticle({ color: 'brown', mass: 8 * 10 ** 11, x: 799, y: 80, radius: 6, speedx: 2, speedy: 10 })
-    // createParticle({ color: 'purple', mass: 6 * 10 ** 12, x: 799, y: 500, radius: 10, speedx: 5 })
-    // createParticle({ color: 'red', mass: 9 * 10 ** 12, x: 701, y: 500, radius: 12, speedx: -2 })
-    // createParticle({ color: 'gray', mass: 9 * 10 ** 14, x: 451, y: 100, radius: 40, speedx: 0, speedy: 0 })
-    // createParticle({ color: 'pink', mass: 4 * 10 ** 14, x: 101, y: 800, radius: 40, speedx: 0, speedy: 0 })
+
+    const scale = 2.5 * 10 ** 8
+
+    // const Sun = createParticle({ color: 'yellow', mass: (1.989 * 10 ** 30) / (scale ** 2), x: canvas.width / 2, y: canvas.height / 2, radius: (6.9634 * 10 ** 8) / scale })
+    // const Earth = createParticle({ color: '#0099ff', mass: (5.97 * 10 ** 24) / (scale ** 2), x: canvas.width / 2 + (149.6 * 10 ** 9) / scale, y: canvas.height / 2, radius: (6.371 * 10 ** 6) / scale, speedx: -1.33211 * 10 ** 1, speedy: 0 })
+    // const moon = createParticle({ color: 'silver', mass: (7.35 * 10 ** 22) / (scale ** 2), x: canvas.width / 2 + (154 * 10 ** 9 + 384.4 * 10 ** 6) / scale, y: canvas.height, radius: 1.737 * 10 ** 6) / scale, speedx: 1082, speedy: 0 })
+
+    const Sunx2 = createParticle({ color: 'black', mass: (1.989 * 10 ** 31) / (scale ** 2), x: canvas.width / 2, y: canvas.height / 2, radius: 60 })
+    // const Earthx2 = createParticle({ color: '#0099ff', mass: (5.97 * 10 ** 24) / (scale ** 2), x: canvas.width / 2 + (154 * 10 ** 9) / scale, y: canvas.height / 2, radius: 3, speedx: 0, speedy: 0.29290 * 5 })
+    // const moonx2 = createParticle({ color: 'silver', mass: (7.35 * 10 ** 22) / (scale ** 2), x: canvas.width / 2 + (154 * 10 ** 9 + 384.4 * 10 ** 6) / scale, y: canvas.height / 2, radius: 1, speedx: 0, speedy: (29290 + 1082) / scale })
+
+    //light
+    // for (i = 0; i < 700; i++) {
+    //     createParticle({ color: 'yellow', mass: 1, x: -5000 + i * 8, y: 30, radius: 3, speedx: 5 })
+    // }
+
+    // for (i = 0; i < 700; i++) {
+    //     createParticle({ color: 'yellow', mass: 1, x: -5000 + i * 8, y: canvas.height - 30, radius: 3, speedx: 5 })
+    // }
+
+    setInterval(() => {
+        createParticle({ color: 'yellow', mass: 1, x: 0, y: 30, radius: 3, speedx: 5 })
+    }, 31)
+    setInterval(() => {
+        createParticle({ color: 'yellow', mass: 1, x: 0, y: canvas.height - 30, radius: 3, speedx: 5 })
+    }, 31)
 
 
-    for (i = 0; i < canvas.width; i += 200) {
-        for (j = 0; j < canvas.height; j += 60)
-            createParticle({ color: 'gray', mass: 2.2 * 10 ** 9, x: i, y: j, radius: 10 })
-        for (j = 20; j < canvas.height; j += 60)
-            createParticle({ color: 'red', mass: 4.4 * 10 ** 9, x: i, y: j, radius: 8 })
-        for (j = 32; j < canvas.height; j += 60)
-            createParticle({ color: 'pink', mass: 6.6 * 10 ** 9, x: i, y: j, radius: 6 })
-        for (j = 44; j < canvas.height; j += 60)
-            createParticle({ color: 'blue', mass: 8.8 * 10 ** 9, x: i, y: j, radius: 4 })
-    }
+    //gasses planets
+    // for (i = 0; i < 200; i++) {
+    //     createParticle({ color: 'yellow', mass: 4 * 10 ** 10, x: -600 + i * 12, y: canvas.height / 2, radius: 6, speedx: 0 })
+    // }
+    // for (i = 0; i < 200; i++) {
+    //     createParticle({ color: 'red', mass: 2 * 10 ** 10, x: -600 + i * 12, y: canvas.height / 2 + 100, radius: 5, speedx: 0 })
+    // }
+    // for (i = 0; i < 200; i++) {
+    //     createParticle({ color: 'red', mass: 2 * 10 ** 10, x: -600 + i * 12, y: canvas.height / 2 - 100, radius: 5, speedx: 0 })
+    // }
+    // for (i = 0; i < 200; i++) {
+    //     createParticle({ color: 'blue', mass: 3 * 10 ** 10, x: -600 + i * 12, y: canvas.height / 2 - 200, radius: 4, speedx: 0 })
+    // }
+    // for (i = 0; i < 200; i++) {
+    //     createParticle({ color: 'blue', mass: 3 * 10 ** 10, x: -600 + i * 12, y: canvas.height / 2 + 200, radius: 4, speedx: 0 })
+    // }
 
-    for (i = 30; i < canvas.width; i += 100) {
-        for (j = 0; j < canvas.height; j += 60)
-            createParticle({ color: 'black', mass: 1.2 * 10 ** 10, x: i, y: j, radius: 3 })
-    }
+
+    //gasses
+
+    // for (i = 0; i < canvas.width; i += 100) {
+    //     for (j = 0; j < canvas.height; j += 60)
+    //         createParticle({ color: 'gray', mass: 8 * 10 ** 10, x: i, y: j, radius: 12 })
+    //     for (j = 20; j < canvas.height; j += 60)
+    //         createParticle({ color: 'red', mass: 4 * 10 ** 10, x: i, y: j, radius: 10 })
+    //     for (j = 32; j < canvas.height; j += 60)
+    //         createParticle({ color: 'pink', mass: 2 * 10 ** 10, x: i, y: j, radius: 8 })
+    //     for (j = 44; j < canvas.height; j += 60)
+    //         createParticle({ color: 'blue', mass: 1 * 10 ** 10, x: i, y: j, radius: 6 })
+    // }
+
+    // for (i = 30; i < canvas.width; i += 60) {
+    //     for (j = 0; j < canvas.height; j += 60)
+    //         createParticle({ color: 'black', mass: 5 * 10 ** 9, x: i, y: j, radius: 4 })
+    // }
+
+    // setTimeout(() => {
+    //     let counter = 0
+    //     setInterval(() => {
+
+    //         if (counter < 300) {
+    //             canvas.width -= 3.1
+    //             canvas.height -= 2
+    //         } else if (counter < 600) {
+
+    //         } else if (counter < 1100) {
+    //             canvas.height += 3
+    //             canvas.width += 2.5
+    //         } else {
+
+    //         }
+    //         counter++
+    //     }, 60)
+    // }, 5000)
+
+    //waves
+    // for (i = 0; i < 30; i++) {
+    //     for (j = 0; j < 20; j++) {
+    //         createParticle({ color: 'black', mass: 1, x: i * 10, y: 400 + j * 10, radius: 4, speedx: 3 })
+
+    //     }
+    // }
+    // for (i = 0; i < 30; i++) {
+    //     for (j = 0; j < 20; j++) {
+    //         createParticle({ color: 'black', mass: 1, x: i * 10 + 400, y: 400 + j * 10, radius: 4, speedx: 1 })
+
+    //     }
+    // }
+
+    // for (i = canvas.width; i > 0; i -= 55) {
+    //     for (j = canvas.height; j > 0; j -= 55) {
+    //         createParticle({ color: 'black', mass: 10 ** 12, x: i, y: j, radius: 15, speedx: 0 })
+    //     }
+    // }
+
+    // for (i = canvas.height / 2; i > 0; i -= 55) {
+    //     createParticle({ color: 'blue', mass: 1, x: -50, y: i * 2, radius: 25, speedx: 1 })
+    // }
+
+    // for (i = canvas.width / 2; i > 0; i -= 55) {
+    //     createParticle({ color: 'blue', mass: 1, x: i, y: canvas.height + 50, radius: 25, speedy: 1 })
+    // }
 
     return {
         state,
@@ -218,9 +323,11 @@ function createGame() {
 
 const game = createGame()
 
+let counter = 0
 function render() {
 
     //game.gravityOnlyFirstBody()
+    //counter++
     for (let i = 0; i < game.state.length; i++) {
         const body = game.state[i]
 
@@ -229,7 +336,12 @@ function render() {
         game.move(body)
     }
 
+    // if (counter === 30) {
+    //     game.createParticle({ color: 'gray', mass: 1 * 10 ** 10, x: canvas.width / 2, y: canvas.height / 2, radius: 10 })
+    //     counter = 0
+    // }
     game.draw()
     requestAnimationFrame(render)
 }
+ctx.fillRect(0, 0, canvas.width, canvas.height)
 render()
